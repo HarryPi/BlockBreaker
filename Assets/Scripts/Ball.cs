@@ -1,18 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour {
     [SerializeField]
     private Paddle paddle;
 
+    [SerializeField]
+    private List<AudioClip> ballSounds;
+
     private Vector2 _paddleToBallVector;
     private Rigidbody2D _body;
+    private AudioSource _audio;
     private bool _laucnhed;
-    
+
     // Start is called before the first frame update
     void Start() {
         _body = GetComponent<Rigidbody2D>();
+        _audio = GetComponent<AudioSource>();
         _paddleToBallVector = transform.position - paddle.transform.position;
     }
 
@@ -34,5 +41,10 @@ public class Ball : MonoBehaviour {
     private void LockBallToPaddle() {
         Vector2 paddlePosition = new Vector2(paddle.transform.position.x, paddle.transform.position.y);
         transform.position = _paddleToBallVector + paddlePosition;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        AudioClip clip = ballSounds[Random.Range(0, ballSounds.Count - 1)];
+        _audio.PlayOneShot(clip);
     }
 }
