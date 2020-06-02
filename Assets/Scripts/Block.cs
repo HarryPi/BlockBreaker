@@ -16,15 +16,20 @@ public class Block : MonoBehaviour {
     private int maxHits;
 
     [SerializeField]
-    private int hitsReceived;
+    private int hitsReceived = 0;
+
+    [SerializeField]
+    private List<Sprite> sprites = new List<Sprite>();
 
     // Cached reference
     private Level _level;
     private GameSession _session;
+    private SpriteRenderer _spriteRenderer;
 
     private void Start() {
         CountBreakableBlocks();
         _session = FindObjectOfType<GameSession>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void CountBreakableBlocks() {
@@ -45,6 +50,13 @@ public class Block : MonoBehaviour {
         if (hitsReceived >= maxHits) {
             DestroyBlock();
         }
+        else {
+            ShowNextHitSprite();
+        }
+    }
+
+    private void ShowNextHitSprite() {
+        _spriteRenderer.sprite = sprites[hitsReceived - 1];
     }
 
     private void DestroyBlock() {
