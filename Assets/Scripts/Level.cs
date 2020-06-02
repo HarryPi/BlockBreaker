@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,22 @@ public class Level : MonoBehaviour {
 
     [SerializeField]
     private int breakableBlocks; // Serialized for debugging purposes
-    
-    // Start is called before the first frame update
-    void Start() { }
 
-    // Update is called once per frame
-    void Update() { }
+    private SceneLoader _sceneLoader;
+
+    private void Start() {
+        _sceneLoader = FindObjectOfType<SceneLoader>();
+    }
+
+    public void CountBreakableBlocks() {
+        breakableBlocks++;
+    }
+
+    public void BlockDestroyed() {
+        breakableBlocks--;
+        if (breakableBlocks <= 0) {
+            _sceneLoader.LoadNextScene();
+        }
+    }
+    
 }
