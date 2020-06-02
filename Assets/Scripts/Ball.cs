@@ -14,7 +14,8 @@ public class Ball : MonoBehaviour {
     private Vector2 _paddleToBallVector;
     private Rigidbody2D _body;
     private AudioSource _audio;
-    private bool _laucnhed;
+    private bool _launched;
+    private float _randomFactor = 0.2f;
 
     // Start is called before the first frame update
     void Start() {
@@ -25,7 +26,7 @@ public class Ball : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!_laucnhed) {
+        if (!_launched) {
             LockBallToPaddle();
             LaunchOnMouseClick();
         }
@@ -33,7 +34,7 @@ public class Ball : MonoBehaviour {
 
     private void LaunchOnMouseClick() {
         if (Input.GetMouseButtonDown(0)) {
-            _laucnhed = true;
+            _launched = true;
             _body.velocity = new Vector2(2f, 15f);
         }
     }
@@ -44,7 +45,9 @@ public class Ball : MonoBehaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
+        Vector2 velocityTweak = new Vector2(Random.Range(0f, _randomFactor), Random.Range(0f, _randomFactor));
         AudioClip clip = ballSounds[Random.Range(0, ballSounds.Count - 1)];
         _audio.PlayOneShot(clip);
+        _body.velocity += velocityTweak;
     }
 }
